@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+  <ribbon>
+    <tabs>
+		<tab id="customTab" insertBeforeMso="TabHome" label="Excel Tab">
+			<group id="customGroup" label="My Group">
+				<button id="cutButton" label="Cut" onAction="OnCutButtonClick" imageMso="Cut"/>
+				<button id="copyButton" label="Copy" onAction="OnCopyButtonClick" imageMso="Copy"/>
+				<button id="pasteButton" label="Paste" onAction="OnPasteButtonClick" imageMso="Paste"/>
+			</group>
+			<group id="fontGroup" label="Font">
+				<button id="boldButton" label="Bold" onAction="OnBoldButtonClick" imageMso="Bold"/>
+				<button id="italicButton" label="Italic" onAction="OnItalicButtonClick" imageMso="Italic"/>
+				<button id="underlineButton" label="Underline" onAction="OnUnderlineButtonClick" imageMso="Underline"/>
+				<editBox id="fontSizeEditBox" label="Font Size" onChange="OnFontSizeChange"/>
+				<dropDown id="fontNameDropDown" label="Font Name" onAction="OnFontNameChange" getItemLabel="GetFontNameLabel" getItemCount="GetFontNameCount"/>
+				<button id="fontColorButton" label="Font Color" onAction="OnFontColorButtonClick"/>
+			</group>
+		</tab>
+	</tabs>
+  </ribbon>
+</customUI>
+

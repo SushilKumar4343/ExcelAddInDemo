@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
+using Microsoft.Office.Core;
 
 namespace ExcelAddInDemo
 {
@@ -17,6 +18,11 @@ namespace ExcelAddInDemo
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+        }
+
+        protected override IRibbonExtensibility CreateRibbonExtensibilityObject()
+        {
+            return new Ribbon();
         }
 
         #region VSTO generated code
