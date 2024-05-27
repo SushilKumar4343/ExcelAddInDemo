@@ -37,6 +37,7 @@ namespace ExcelAddInDemo
     {
         private IRibbonUI ribbon;
         private List<string> fontNames;
+        private Excel.Range copiedRange;
 
         public Ribbon()
         {
@@ -49,40 +50,92 @@ namespace ExcelAddInDemo
 
         public void OnCutButtonClick(IRibbonControl control)
         {
-            ExecuteCommand("Cut");
+            CutSelection();
         }
 
         public void OnCopyButtonClick(IRibbonControl control)
         {
-            ExecuteCommand("Copy");
+            CopySelection();
         }
 
         public void OnPasteButtonClick(IRibbonControl control)
         {
-            ExecuteCommand("Paste");
+            PasteSelection();
         }
-
-        private void ExecuteCommand(string command)
+        private void CopySelection()
         {
-            Excel.Application excelApp = Globals.ThisAddIn.Application;
-            Excel.Range selectedRange = excelApp.Selection as Excel.Range;
-
-            if (selectedRange != null)
+            try
             {
-                switch (command)
+                Excel.Application excelApp = Globals.ThisAddIn.Application;
+                Excel.Range selectedRange = excelApp.Selection as Excel.Range;
+
+                if (selectedRange != null)
                 {
-                    case "Cut":
-                        selectedRange.Cut();
-                        break;
-                    case "Copy":
-                        selectedRange.Copy();
-                        break;
-                    case "Paste":
-                        selectedRange.PasteSpecial(Excel.XlPasteType.xlPasteAll);
-                        break;
+                    selectedRange.Copy();
+                    copiedRange = selectedRange;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No range selected for copying.");
                 }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception during copy: " + ex.Message);
+            }
         }
+
+        private void CutSelection()
+        {
+            try
+            {
+                Excel.Application excelApp = Globals.ThisAddIn.Application;
+                Excel.Range selectedRange = excelApp.Selection as Excel.Range;
+
+                if (selectedRange != null)
+                {
+                    selectedRange.Cut();
+                    copiedRange = selectedRange;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No range selected for cutting.");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception during cut: " + ex.Message);
+            }
+        }
+
+        private void PasteSelection()
+        {
+            try
+            {
+                Excel.Application excelApp = Globals.ThisAddIn.Application;
+                Excel.Range selectedRange = excelApp.Selection as Excel.Range;
+
+                if (selectedRange != null && copiedRange != null)
+                {
+                    selectedRange.PasteSpecial(Excel.XlPasteType.xlPasteAll);
+                    excelApp.CutCopyMode = 0;  // Clear the clipboard mode
+                    copiedRange = null;        // Reset the copied range after pasting
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No range selected for pasting or no data available.");
+                }
+            }
+            catch (System.Runtime.InteropServices.COMException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("COMException during paste: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception during paste: " + ex.Message);
+            }
+        }
+
 
         // Font Methods
         public void OnBoldButtonClick(IRibbonControl control)
